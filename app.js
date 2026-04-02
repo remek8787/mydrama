@@ -26,9 +26,9 @@ const platforms = {
     detailPath: (id, lang) => `/api/detail/${enc(id)}?lang=${enc(lang)}`,
     episodesPath: () => null,
     episodeToVideoPath: (epId, lang, key) => `/api/video/${enc(epId)}?lang=${enc(lang)}&code=${enc(key)}`,
-    idKeys: ["id", "dramaId", "bookId", "seriesId"],
-    titleKeys: ["title", "name", "dramaName", "bookName"],
-    imageKeys: ["cover", "coverUrl", "poster", "img", "image"],
+    idKeys: ["id", "dramaId", "bookId", "seriesId", "book_id"],
+    titleKeys: ["title", "name", "dramaName", "bookName", "book_name"],
+    imageKeys: ["cover", "coverUrl", "poster", "img", "image", "thumb_url"],
     episodeIdKeys: ["vid", "videoId", "id", "episodeId", "chapterId"]
   },
   shortmax: {
@@ -245,7 +245,15 @@ function normalizeItems(rawItems) {
         title,
         image,
         raw: item,
-        subtitle: String(item.author || item.type || item.classify || item.category || "")
+        subtitle: String(
+          item.author ||
+            item.type ||
+            item.classify ||
+            item.category ||
+            (item.episodes ? `${item.episodes} eps` : "") ||
+            (item.serial_count ? `${item.serial_count} eps` : "") ||
+            ""
+        )
       };
     })
     .filter((x) => x.id || x.title !== "Untitled");
@@ -372,19 +380,30 @@ async function loadHomeContent() {
 
   try {
     const data = await apiGet(cfg.homePath(state.currentLang));
-    const list = pickLikelyArray(data, [
-      "recommendList.records",
-      "recommendList",
-      "records",
-      "result.records",
-      "result.list",
-      "result",
-      "data.records",
-      "data.list",
-      "data",
-      "list",
-      "items"
-    ]);
+    let list = [];
+
+    // Melolo home response usually nested in data.cell.cell_data[].books[]
+    const meloloCellRows = getByPath(data, "data.cell.cell_data");
+    if (Array.isArray(meloloCellRows) && meloloCellRows.length) {
+      list = meloloCellRows.flatMap((row) => (Array.isArray(row?.books) ? row.books : []));
+    }
+
+    if (!list.length) {
+      list = pickLikelyArray(data, [
+        "recommendList.records",
+        "recommendList",
+        "records",
+        "result.records",
+        "result.list",
+        "result",
+        "data.records",
+        "data.list",
+        "data.books",
+        "data",
+        "list",
+        "items"
+      ]);
+    }
 
     state.searchResults = normalizeItems(list);
     renderResults();
