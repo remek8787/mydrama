@@ -6,6 +6,7 @@ const platforms = {
     base: "https://dramabox.dramabos.my.id",
     langs: ["in", "en", "th", "vi", "ja", "ko"],
     defaultLang: "in",
+    homePath: (lang) => `/api/v1/homepage?page=1&lang=${enc(lang)}`,
     searchPath: (q, lang) => `/api/v1/search?query=${enc(q)}&lang=${enc(lang)}`,
     detailPath: (id, lang, key) => `/api/v1/detail?bookId=${enc(id)}&lang=${enc(lang)}&code=${enc(key)}`,
     episodesPath: (id, lang, key) => `/api/v1/allepisode?bookId=${enc(id)}&lang=${enc(lang)}&code=${enc(key)}`,
@@ -20,6 +21,7 @@ const platforms = {
     base: "https://melolo.dramabos.my.id",
     langs: ["id", "en", "es", "ko", "th", "ja", "de", "fr", "pt", "ar", "tr"],
     defaultLang: "id",
+    homePath: (lang) => `/api/home?lang=${enc(lang)}&offset=0`,
     searchPath: (q, lang) => `/api/search?lang=${enc(lang)}&q=${enc(q)}`,
     detailPath: (id, lang) => `/api/detail/${enc(id)}?lang=${enc(lang)}`,
     episodesPath: () => null,
@@ -34,6 +36,7 @@ const platforms = {
     base: "https://shortmax.dramabos.my.id",
     langs: ["in", "en", "th", "vi", "es", "pt", "de", "fr", "ja", "ko", "ar"],
     defaultLang: "in",
+    homePath: (lang) => `/api/home?lang=${enc(lang)}&page=1&size=30`,
     searchPath: (q, lang) => `/api/search?lang=${enc(lang)}&q=${enc(q)}&size=20`,
     detailPath: null,
     episodesPath: (id, lang, key) => `/api/chapters/${enc(id)}?lang=${enc(lang)}&code=${enc(key)}`,
@@ -85,6 +88,10 @@ function enc(v) {
 
 function setStatus(msg) {
   ui.status.textContent = msg;
+}
+
+function hasApiKey() {
+  return Boolean(state.apiKey && state.apiKey.trim());
 }
 
 function saveLocal() {
@@ -221,7 +228,7 @@ function findFirstUrl(input) {
 function normalizeItems(rawItems) {
   const cfg = platforms[state.currentPlatform];
 
-  return rawItems
+  const list = rawItems
     .map((item) => {
       const id = String(findValue(item, cfg.idKeys) || "").trim();
       const title = String(findValue(item, cfg.titleKeys) || "Untitled").trim();
@@ -236,6 +243,15 @@ function normalizeItems(rawItems) {
       };
     })
     .filter((x) => x.id || x.title !== "Untitled");
+
+  // Dedup by ID/title
+  const seen = new Set();
+  return list.filter((x) => {
+    const key = `${x.id}::${x.title}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function renderResults() {
@@ -278,7 +294,10 @@ function escapeHtml(str) {
 
 async function searchDrama() {
   const query = ui.queryInput.value.trim();
-  if (!query) return setStatus("Masukkan kata kunci dulu.");
+  if (!query) {
+    await loadHomeContent();
+    return;
+  }
 
   setStatus(`Mencari “${query}” di ${platforms[state.currentPlatform].label}...`);
 
@@ -309,6 +328,37 @@ async function searchDrama() {
   }
 }
 
+async function loadHomeContent() {
+  const cfg = platforms[state.currentPlatform];
+  if (!cfg.homePath) return;
+
+  setStatus(`Memuat beranda ${cfg.label}...`);
+
+  try {
+    const data = await apiGet(cfg.homePath(state.currentLang));
+    const list = pickLikelyArray(data, [
+      "recommendList.records",
+      "recommendList",
+      "records",
+      "result.records",
+      "result.list",
+      "result",
+      "data.records",
+      "data.list",
+      "data",
+      "list",
+      "items"
+    ]);
+
+    state.searchResults = normalizeItems(list);
+    renderResults();
+    setStatus(`Beranda dimuat. Menampilkan ${state.searchResults.length} judul.`);
+  } catch (err) {
+    console.error(err);
+    setStatus(`Gagal memuat beranda: ${err.message}`);
+  }
+}
+
 function renderDetailPlaceholder(item) {
   ui.detailTitle.textContent = item.title || "Detail Drama";
   ui.detailMeta.textContent = `ID: ${item.id || "-"} • Platform: ${platforms[state.currentPlatform].label}`;
@@ -333,15 +383,41 @@ function normalizeEpisodes(rawData) {
       ep.episodeNum || ep.num || ep.sort || ep.index || ep.seq || ep.order || ep.chapterNum || idx + 1;
     const title = ep.title || ep.name || ep.episodeName || ep.chapterTitle || `Episode ${no}`;
     const url = findFirstUrl(ep);
+    const locked = isEpisodeLocked(ep, url);
 
     return {
       id,
       no: Number(no) || idx + 1,
       title: String(title),
       url,
+      locked,
       raw: ep
     };
   });
+}
+
+function isEpisodeLocked(rawEp, url) {
+  const boolTrueKeys = ["isLock", "locked", "needPay", "isNeedPay", "needVip", "isVip", "needUnlock"];
+  const boolFalseKeys = ["canWatch", "canPlay", "watchable", "playable", "isFree", "isUnlock"];
+  const numericPayKeys = ["payType", "chargeType", "lockType", "unlockType"];
+
+  for (const k of boolTrueKeys) {
+    if (rawEp && rawEp[k] === true) return true;
+  }
+
+  for (const k of boolFalseKeys) {
+    if (rawEp && rawEp[k] === false) return true;
+  }
+
+  for (const k of numericPayKeys) {
+    const v = Number(rawEp?.[k]);
+    if (Number.isFinite(v) && v > 0) return true;
+  }
+
+  // Heuristic: no direct URL and no token provided usually means locked episode.
+  if (!url && !hasApiKey()) return true;
+
+  return false;
 }
 
 async function loadDetail(item) {
@@ -396,7 +472,10 @@ function renderEpisodes() {
 
   const sorted = [...state.episodes].sort((a, b) => a.no - b.no);
   ui.episodeList.innerHTML = sorted
-    .map((ep) => `<button class="ep-btn" data-ep="${escapeHtml(ep.id)}">E${ep.no}</button>`)
+    .map((ep) => {
+      const lockIcon = ep.locked ? "🔒 " : "";
+      return `<button class="ep-btn" data-ep="${escapeHtml(ep.id)}">${lockIcon}E${ep.no}</button>`;
+    })
     .join("");
 
   ui.episodeList.querySelectorAll(".ep-btn").forEach((btn) => {
@@ -428,6 +507,11 @@ async function resolvePlayUrl(ep) {
 }
 
 async function playEpisode(ep) {
+  if (ep.locked && !hasApiKey()) {
+    ui.playerInfo.textContent = `Episode ${ep.no} terkunci. Masukkan token untuk membuka episode berbayar.`;
+    return;
+  }
+
   ui.playerInfo.textContent = `Mencari source Episode ${ep.no}...`;
 
   try {
@@ -469,20 +553,31 @@ function bindEvents() {
   ui.saveKeyBtn.addEventListener("click", () => {
     state.apiKey = ui.apiKey.value.trim() || DEFAULT_KEY;
     saveLocal();
-    setStatus("API key disimpan.");
+    setStatus("API key disimpan. Episode berbayar akan coba dibuka dengan token ini.");
+
+    if (state.selectedItem) {
+      loadDetail(state.selectedItem);
+    }
   });
 
   ui.platformSelect.addEventListener("change", () => {
     state.currentPlatform = ui.platformSelect.value;
     state.currentLang = platforms[state.currentPlatform].defaultLang;
+    state.selectedItem = null;
+    state.episodes = [];
+    ui.episodeList.innerHTML = "";
+    ui.detailTitle.textContent = "Detail Drama";
+    ui.detailMeta.textContent = "Pilih drama dari hasil pencarian.";
     buildLangSelect();
     saveLocal();
     setStatus(`Platform diubah ke ${platforms[state.currentPlatform].label}.`);
+    loadHomeContent();
   });
 
   ui.langSelect.addEventListener("change", () => {
     state.currentLang = ui.langSelect.value;
     saveLocal();
+    loadHomeContent();
   });
 
   ui.searchBtn.addEventListener("click", searchDrama);
@@ -499,7 +594,8 @@ function init() {
   ui.queryInput.value = "cinta";
   bindEvents();
   renderResults();
-  setStatus("Ready. Pilih platform lalu cari drama.");
+  setStatus("Ready. Beranda drama akan dimuat otomatis.");
+  loadHomeContent();
 }
 
 init();

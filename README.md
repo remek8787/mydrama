@@ -10,10 +10,12 @@ Website nonton drama multi-platform berbasis API:
 
 - Pilih platform + bahasa
 - Search drama
+- Auto tampil daftar beranda/trending saat pertama dibuka (tanpa kata kunci)
 - Buka detail drama
 - Tampilkan daftar episode
 - Play video (support HLS `.m3u8` via `hls.js`)
 - Simpan API key/token di browser (`localStorage`)
+- Episode berbayar ditandai 🔒 dan akan mencoba unlock saat token diisi
 
 ## Stack
 
