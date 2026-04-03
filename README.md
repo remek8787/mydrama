@@ -27,6 +27,7 @@ Website portal drama yang siap jalan di **GitHub Pages**.
   - lihat detail + daftar episode
   - pagination episode (bukan cuma tampil 10)
   - auto lanjut ke episode berikutnya setelah selesai
+  - tap area video: kiri mundur 10 detik, kanan maju 10 detik
   - play video (`m3u8` pakai `hls.js`)
 
 ## URL Parameter di Hub

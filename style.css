@@ -239,6 +239,7 @@ body.app-body {
 }
 
 .player-wrap {
+  position: relative;
   border: 1px solid var(--line);
   border-radius: 10px;
   overflow: hidden;
@@ -249,6 +250,28 @@ body.app-body {
   width: 100%;
   min-height: 190px;
   background: #000;
+}
+
+.tap-seek-hint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  border: 1px solid rgba(111, 220, 255, 0.75);
+  background: rgba(6, 15, 36, 0.82);
+  color: #e6f7ff;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 999px;
+  padding: 8px 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.16s ease;
+}
+
+.tap-seek-hint.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .episode-list {

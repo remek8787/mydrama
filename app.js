@@ -1,4 +1,5 @@
 const DEFAULT_KEY = "331D2CC91BC4C0B2218052619DBBBA84";
+const SEEK_STEP_SECONDS = 10;
 
 const platforms = {
   dramabox: {
@@ -108,7 +109,8 @@ const ui = {
   episodeList: byId("episodeList"),
   rawJson: byId("rawJson"),
   playerInfo: byId("playerInfo"),
-  player: byId("videoPlayer")
+  player: byId("videoPlayer"),
+  tapSeekHint: byId("tapSeekHint")
 };
 
 function byId(id) {
@@ -121,6 +123,48 @@ function enc(v) {
 
 function setStatus(msg) {
   ui.status.textContent = msg;
+}
+
+function showTapSeekHint(text) {
+  if (!ui.tapSeekHint) return;
+  ui.tapSeekHint.textContent = text;
+  ui.tapSeekHint.classList.add("show");
+  clearTimeout(showTapSeekHint._timer);
+  showTapSeekHint._timer = setTimeout(() => {
+    ui.tapSeekHint.classList.remove("show");
+  }, 700);
+}
+
+function seekBy(seconds) {
+  const video = ui.player;
+  if (!video) return;
+  if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+
+  const current = Number.isFinite(video.currentTime) ? video.currentTime : 0;
+  const next = Math.max(0, Math.min(video.duration, current + seconds));
+  video.currentTime = next;
+  showTapSeekHint(`${seconds > 0 ? "+" : "-"}${Math.abs(seconds)}s`);
+}
+
+function handlePlayerTapSeek(event) {
+  const video = ui.player;
+  if (!video) return;
+
+  const rect = video.getBoundingClientRect();
+  const x = event.clientX;
+  const y = event.clientY;
+
+  // Jangan ganggu area kontrol bawaan video di bawah.
+  if (rect.bottom - y < 58) return;
+
+  const leftBound = rect.left + rect.width * 0.35;
+  const rightBound = rect.right - rect.width * 0.35;
+
+  if (x <= leftBound) {
+    seekBy(-SEEK_STEP_SECONDS);
+  } else if (x >= rightBound) {
+    seekBy(SEEK_STEP_SECONDS);
+  }
 }
 
 function hasApiKey() {
@@ -1024,6 +1068,8 @@ function bindEvents() {
   ui.player.addEventListener("ended", () => {
     if (state.autoNext) playNextEpisode();
   });
+
+  ui.player.addEventListener("pointerup", handlePlayerTapSeek);
 
   ui.saveKeyBtn.addEventListener("click", () => {
     state.apiKey = ui.apiKey.value.trim() || DEFAULT_KEY;
