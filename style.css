@@ -25,6 +25,27 @@ body.app-body {
     linear-gradient(180deg, var(--bg-2), var(--bg-1));
 }
 
+.app-body .btn {
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.app-body .btn-primary {
+  border: none;
+  background: linear-gradient(135deg, #6678ff, #5eebff);
+  color: #081126;
+}
+
+.app-body .btn-info {
+  border: none;
+  background: linear-gradient(135deg, #56e7ff, #68ffc3);
+}
+
+.app-body .btn-outline-light {
+  border-color: rgba(192, 205, 255, 0.42);
+  color: #e3ebff;
+}
+
 .top-nav {
   position: sticky;
   top: 0;
@@ -38,12 +59,75 @@ body.app-body {
   color: #fff;
 }
 
+.brand-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(102, 120, 255, 0.25), rgba(94, 235, 255, 0.28));
+  border: 1px solid rgba(121, 157, 255, 0.45);
+  color: #b9ecff;
+  font-size: 18px;
+}
+
+.brand-text {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.brand-text strong {
+  color: #f3f7ff;
+  font-size: 16px;
+}
+
+.brand-text small {
+  color: #9eb0e7;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ui-badge {
+  border: 1px solid rgba(104, 255, 195, 0.62);
+  background: rgba(104, 255, 195, 0.14);
+  color: #bafde3;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
 .panel {
   border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--panel);
   backdrop-filter: blur(10px);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title i {
+  color: #89e8ff;
+}
+
+.panel-subtitle {
+  color: #95a4d8;
+  font-size: 12px;
+  margin-bottom: 12px;
 }
 
 .form-label,
@@ -383,6 +467,20 @@ pre {
 }
 
 @media (max-width: 992px) {
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .brand-text strong {
+    font-size: 14px;
+  }
+
+  .brand-text small {
+    font-size: 10px;
+  }
+
   .top-nav .navbar-brand {
     font-size: 1rem;
   }
@@ -429,6 +527,11 @@ pre {
 }
 
 @media (max-width: 768px) {
+  .ui-badge {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
   .top-nav .container-fluid {
     gap: 8px;
     align-items: flex-start;

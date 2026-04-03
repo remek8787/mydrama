@@ -13,10 +13,17 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="app-body">
-  <nav class="navbar navbar-expand-lg top-nav">
+  <nav class="navbar navbar-expand-lg top-nav py-2">
     <div class="container-fluid px-3 px-lg-4">
-      <a class="navbar-brand fw-bold" href="#">🎬 Archilla Dracin Hub Player</a>
-      <div class="d-flex gap-2">
+      <a class="navbar-brand brand-wrap" href="#">
+        <span class="brand-mark"><i class="bi bi-play-circle-fill"></i></span>
+        <span class="brand-text">
+          <strong>Archilla Dracin</strong>
+          <small>Hub Player</small>
+        </span>
+      </a>
+      <div class="d-flex gap-2 align-items-center">
+        <span class="ui-badge">Modern UI</span>
       </div>
     </div>
   </nav>
@@ -25,7 +32,8 @@
     <div class="row g-3 align-items-stretch">
       <div class="col-12 col-xl-3 order-2 order-xl-1">
         <section class="panel p-2 p-md-3 h-100">
-          <h3 class="h4 mb-3">Pengaturan</h3>
+          <h3 class="h4 mb-1 section-title"><i class="bi bi-sliders2"></i> Pengaturan</h3>
+          <p class="panel-subtitle">Atur provider, bahasa, dan mode nonton.</p>
 
           <label class="form-label">API Key / Token</label>
           <div class="input-group mb-1">
@@ -79,7 +87,7 @@
 
         <section class="panel p-2 p-md-3 mb-3">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <h3 class="h5 mb-0">Rekomendasi</h3>
+            <h3 class="h5 mb-0 section-title"><i class="bi bi-stars"></i> Rekomendasi</h3>
             <span id="recStatus" class="small text-info">Homepage</span>
           </div>
           <div id="recommendGrid" class="result-grid"></div>
@@ -87,7 +95,7 @@
 
         <section class="panel p-2 p-md-3">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <h3 class="h5 mb-0">Hasil Pencarian</h3>
+            <h3 class="h5 mb-0 section-title"><i class="bi bi-search-heart"></i> Hasil Pencarian</h3>
             <span id="resultCount" class="small text-secondary">0 hasil</span>
           </div>
           <div id="resultGrid" class="result-grid"></div>
@@ -96,7 +104,7 @@
 
       <div class="col-12 col-xl-3 order-3 order-xl-3">
         <section class="panel p-2 p-md-3 h-100">
-          <h3 id="detailTitle" class="h4 mb-2">Detail Drama</h3>
+          <h3 id="detailTitle" class="h4 mb-2 section-title"><i class="bi bi-collection-play"></i> Detail Drama</h3>
           <div id="detailMeta" class="meta mb-3">Pilih drama dari hasil pencarian.</div>
 
           <div class="player-wrap mb-2">
