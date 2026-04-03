@@ -19,6 +19,7 @@ Website portal drama yang siap jalan di **GitHub Pages**.
   - **Nonton** (halaman web provider)
   - **Masuk Hub** (langsung ke player dengan preset platform)
 - Hub player (UI baru, Bootstrap CDN + custom dark glass):
+  - responsif HP (layout mobile-first, feed/keyword bisa geser horizontal)
   - pilih platform + bahasa
   - search drama / muat beranda otomatis
   - tab rekomendasi API: `homepage`, `latest`, `dubbed`, `foryou`, `popular`

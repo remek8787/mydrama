@@ -359,12 +359,128 @@ pre {
   }
 }
 
+@media (max-width: 992px) {
+  .top-nav .navbar-brand {
+    font-size: 1rem;
+  }
+
+  .top-nav .btn {
+    --bs-btn-padding-y: 0.28rem;
+    --bs-btn-padding-x: 0.55rem;
+    --bs-btn-font-size: 0.72rem;
+  }
+
+  .feed-buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    gap: 6px;
+    scrollbar-width: thin;
+  }
+
+  .feed-btn {
+    flex: 0 0 auto;
+    min-width: 92px;
+  }
+
+  .keyword-wrap {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+  }
+
+  .keyword-chip {
+    flex: 0 0 auto;
+  }
+
+  .result-grid {
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 10px;
+  }
+
+  #videoPlayer {
+    min-height: 175px;
+  }
+}
+
 @media (max-width: 768px) {
+  .top-nav .container-fluid {
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .hero-banner {
+    min-height: 208px;
+  }
+
   .hero-banner img {
-    height: 220px;
+    height: 210px;
+  }
+
+  .hero-overlay {
+    padding: 12px;
+  }
+
+  .hero-overlay h2 {
+    font-size: 1.1rem;
+    line-height: 1.25;
   }
 
   .hero-overlay p {
+    font-size: 12px;
     max-width: 100%;
+  }
+
+  .result-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .drama-card .info {
+    padding: 8px;
+  }
+
+  .drama-card .title {
+    font-size: 12px;
+    min-height: 32px;
+  }
+
+  .episode-list {
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .top-nav .navbar-brand {
+    font-size: 0.95rem;
+  }
+
+  .top-nav .d-flex {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .status,
+  .meta {
+    font-size: 11px;
+  }
+
+  .episode-pagination {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 2px;
+  }
+
+  .ep-page-btn {
+    white-space: nowrap;
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .ep-btn {
+    padding: 7px 4px;
+    font-size: 11px;
   }
 }
