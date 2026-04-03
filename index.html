@@ -3,97 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MyDrama Hub</title>
-  <meta name="description" content="Nonton drama dari Dramabox, Melolo, dan Shortmax dalam satu website." />
+  <title>Dramachina Portal</title>
+  <meta name="description" content="Portal nonton drama: Dramabox, Melolo, Shortmax, dan lainnya." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="landing.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div>
-      <h1>🎬 MyDrama Hub</h1>
-      <p>Dramabox • Melolo • Shortmax</p>
+  <header class="hero">
+    <div class="container">
+      <p class="eyebrow">DRAMABOS NETWORK</p>
+      <h1>Dramachina Portal</h1>
+      <p class="subtitle">Satu pintu untuk akses API dan halaman nonton dari semua provider drama.</p>
+      <a class="cta" href="hub.html?platform=dramabox&lang=in&key=331D2CC91BC4C0B2218052619DBBBA84">Buka Hub Utama</a>
     </div>
-    <a class="gh-link" href="https://github.com/remek8787/mydrama" target="_blank" rel="noopener">GitHub Repo</a>
   </header>
 
-  <main class="layout">
-    <aside class="panel left">
-      <h2>Pengaturan</h2>
-
-      <label>API Key / Token</label>
-      <div class="row">
-        <input id="apiKey" type="password" placeholder="Masukkan API key" />
-        <button id="saveKeyBtn">Simpan</button>
-      </div>
-      <small>Token disimpan di browser kamu (localStorage).</small>
-
-      <label>Platform</label>
-      <select id="platformSelect"></select>
-
-      <label>Bahasa</label>
-      <select id="langSelect"></select>
-
-      <label>Kata kunci</label>
-      <div class="row">
-        <input id="queryInput" type="text" placeholder="Opsional (kosong = beranda)" />
-        <button id="searchBtn" class="primary">Cari</button>
-      </div>
-
-      <div id="status" class="status">Siap mencari drama…</div>
-
-      <hr>
-      <h3>Dokumentasi Referensi</h3>
-      <ul class="links">
-        <li><a href="https://dramabox.dramabos.my.id/api.html" target="_blank" rel="noopener">Dramabox API</a></li>
-        <li><a href="https://melolo.dramabos.my.id/api.html" target="_blank" rel="noopener">Melolo API</a></li>
-        <li><a href="https://shortmax.dramabos.my.id/api.html" target="_blank" rel="noopener">Shortmax API</a></li>
-      </ul>
-    </aside>
-
-    <section class="panel content">
-      <section id="heroBanner" class="hero-banner">
-        <img id="heroImage" src="https://dummyimage.com/1200x500/0f172a/94a3b8&text=MyDrama+Hub" alt="Featured Drama" />
-        <div class="hero-overlay">
-          <span id="heroBadge" class="hero-badge">Featured</span>
-          <h2 id="heroTitle">Selamat datang di MyDrama Hub</h2>
-          <p id="heroDesc">Pilih platform lalu klik Cari untuk memulai. Sekarang sudah support autoplay beranda tanpa keyword.</p>
-          <div class="hero-actions">
-            <button id="heroWatchBtn" class="primary">▶ Tonton Sekarang</button>
-            <button id="heroRefreshBtn">↻ Muat Beranda</button>
-          </div>
+  <main class="container">
+    <section class="grid" aria-label="Daftar provider">
+      <article class="card">
+        <div class="badge">Recommended</div>
+        <h2>Dramabox</h2>
+        <p>Provider utama drama pendek. Sudah siap terhubung ke Hub.</p>
+        <div class="actions">
+          <a href="https://dramabox.dramabos.my.id/api.html" target="_blank" rel="noopener">API</a>
+          <a href="https://dramabox.dramabos.my.id/" target="_blank" rel="noopener">Nonton</a>
+          <a class="solid" href="hub.html?platform=dramabox&lang=in&key=331D2CC91BC4C0B2218052619DBBBA84">Masuk Hub</a>
         </div>
-      </section>
+      </article>
 
-      <div class="grid-title">
-        <h2>Hasil Pencarian</h2>
-        <span id="resultCount">0 hasil</span>
-      </div>
-      <div id="resultGrid" class="result-grid"></div>
+      <article class="card">
+        <h2>Melolo</h2>
+        <p>Koleksi drama multi-bahasa dengan endpoint pencarian dan video.</p>
+        <div class="actions">
+          <a href="https://melolo.dramabos.my.id/api.html" target="_blank" rel="noopener">API</a>
+          <a href="https://melolo.dramabos.my.id/" target="_blank" rel="noopener">Nonton</a>
+          <a class="solid" href="hub.html?platform=melolo&lang=id&key=331D2CC91BC4C0B2218052619DBBBA84">Masuk Hub</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Shortmax</h2>
+        <p>Konten short drama dengan endpoint chapter dan list episode.</p>
+        <div class="actions">
+          <a href="https://shortmax.dramabos.my.id/api.html" target="_blank" rel="noopener">API</a>
+          <a href="https://shortmax.dramabos.my.id/" target="_blank" rel="noopener">Nonton</a>
+          <a class="solid" href="hub.html?platform=shortmax&lang=in&key=331D2CC91BC4C0B2218052619DBBBA84">Masuk Hub</a>
+        </div>
+      </article>
+
+      <article class="card muted">
+        <h2>Drakula (Dramachina)</h2>
+        <p>Landing khusus brand dramachina. Slot ini siap dipakai untuk channel baru.</p>
+        <div class="actions">
+          <a href="https://drakula.dramabos.my.id/" target="_blank" rel="noopener">Buka Domain</a>
+        </div>
+      </article>
     </section>
 
-    <aside class="panel right">
-      <h2 id="detailTitle">Detail Drama</h2>
-      <div id="detailMeta" class="meta">Pilih drama dari hasil pencarian.</div>
-
-      <div class="player-wrap">
-        <video id="videoPlayer" controls playsinline></video>
-      </div>
-      <div id="playerInfo" class="status">Belum ada video diputar.</div>
-
-      <h3>Episode</h3>
-      <div id="episodeList" class="episode-list"></div>
-
-      <details>
-        <summary>Raw JSON (debug)</summary>
-        <pre id="rawJson">{}</pre>
-      </details>
-    </aside>
+    <section class="note">
+      <p><strong>Catatan:</strong> versi ini dibuat cepat untuk publik GitHub Pages. API key disisipkan ke link Hub sesuai permintaanmu.</p>
+    </section>
   </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script src="app.js"></script>
 </body>
 </html>

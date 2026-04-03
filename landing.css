@@ -1,0 +1,134 @@
+:root {
+  --bg: #070b17;
+  --panel: #11182b;
+  --panel-2: #171f36;
+  --text: #f3f6ff;
+  --muted: #9aa8c7;
+  --line: #273252;
+  --brand: #7c9bff;
+  --brand-2: #4de0a8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: radial-gradient(circle at top, #17254a 0%, var(--bg) 48%);
+  color: var(--text);
+}
+
+.container {
+  width: min(1120px, 92%);
+  margin: 0 auto;
+}
+
+.hero {
+  padding: 72px 0 38px;
+}
+
+.eyebrow {
+  margin: 0;
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  color: var(--brand-2);
+}
+
+.hero h1 {
+  margin: 8px 0 12px;
+  font-size: clamp(34px, 5vw, 56px);
+}
+
+.subtitle {
+  margin: 0 0 26px;
+  color: var(--muted);
+  max-width: 700px;
+}
+
+.cta {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #0c1222;
+  background: linear-gradient(135deg, var(--brand-2), #88ffd6);
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 10px 0 32px;
+}
+
+.card {
+  position: relative;
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  min-height: 52px;
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 11px;
+  border: 1px solid #375f53;
+  color: #84f2cc;
+  background: rgba(77, 224, 168, 0.12);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.actions a {
+  border: 1px solid #3a4a74;
+  color: #d7e1ff;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 9px 13px;
+  font-size: 14px;
+}
+
+.actions a.solid {
+  color: #081024;
+  border: none;
+  background: linear-gradient(135deg, var(--brand), #c4d3ff);
+  font-weight: 700;
+}
+
+.card.muted {
+  opacity: 0.84;
+}
+
+.note {
+  border-top: 1px dashed #394971;
+  margin-bottom: 40px;
+  padding-top: 18px;
+}
+
+.note p {
+  color: var(--muted);
+  margin: 0;
+}

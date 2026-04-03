@@ -118,6 +118,30 @@ function loadLocal() {
     : defaultLang;
 }
 
+function applyUrlOverrides() {
+  const params = new URLSearchParams(window.location.search);
+  const qsPlatform = (params.get("platform") || "").toLowerCase().trim();
+  const qsLang = (params.get("lang") || "").toLowerCase().trim();
+  const qsKey = (params.get("key") || "").trim();
+
+  if (qsPlatform && platforms[qsPlatform]) {
+    state.currentPlatform = qsPlatform;
+  }
+
+  if (qsLang && platforms[state.currentPlatform].langs.includes(qsLang)) {
+    state.currentLang = qsLang;
+  }
+
+  if (qsKey) {
+    state.apiKey = qsKey;
+  }
+
+  return {
+    query: (params.get("q") || "").trim(),
+    autoSearch: params.get("auto") === "1"
+  };
+}
+
 function buildPlatformSelect() {
   ui.platformSelect.innerHTML = Object.entries(platforms)
     .map(([key, cfg]) => `<option value="${key}">${cfg.label}</option>`)
@@ -660,12 +684,21 @@ function bindEvents() {
 
 function init() {
   loadLocal();
+  const qs = applyUrlOverrides();
   buildPlatformSelect();
   buildLangSelect();
   ui.apiKey.value = state.apiKey;
-  ui.queryInput.value = "cinta";
+  ui.queryInput.value = qs.query;
   bindEvents();
   renderResults();
+  saveLocal();
+
+  if (qs.autoSearch && qs.query) {
+    setStatus("Mode auto search dari URL aktif.");
+    searchDrama();
+    return;
+  }
+
   setStatus("Ready. Beranda drama akan dimuat otomatis.");
   loadHomeContent();
 }

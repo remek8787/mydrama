@@ -1,47 +1,54 @@
-# MyDrama Hub
+# Dramachina / MyDrama Hub
 
-Website nonton drama multi-platform berbasis API:
+Website portal drama yang siap jalan di **GitHub Pages**.
 
-- Dramabox
-- Melolo
-- Shortmax
+## Struktur Utama
+
+- `index.html` → Landing/portal provider (tombol API, Nonton, Masuk Hub)
+- `hub.html` → Player hub multi-provider (Dramabox, Melolo, Shortmax)
+- `app.js` → Logic fetch API, detail, episode, video player
+- `style.css` → Styling halaman hub
+- `landing.css` → Styling halaman portal
 
 ## Fitur
 
-- Pilih platform + bahasa
-- Search drama
-- Auto tampil daftar beranda/trending saat pertama dibuka (tanpa kata kunci)
-- Buka detail drama
-- Tampilkan daftar episode
-- Play video (support HLS `.m3u8` via `hls.js`)
-- Simpan API key/token di browser (`localStorage`)
-- Episode berbayar ditandai 🔒 dan akan mencoba unlock saat token diisi
+- Tampilan portal gaya kartu app (mirip referensi)
+- Tombol cepat:
+  - **API** (dokumentasi endpoint)
+  - **Nonton** (halaman web provider)
+  - **Masuk Hub** (langsung ke player dengan preset platform)
+- Hub player:
+  - pilih platform + bahasa
+  - search drama / muat beranda otomatis
+  - lihat detail + daftar episode
+  - play video (`m3u8` pakai `hls.js`)
 
-## Stack
+## URL Parameter di Hub
 
-- HTML + CSS + Vanilla JS
-- `hls.js` CDN
-- Deploy cocok untuk GitHub Pages
+`hub.html` mendukung query parameter:
 
-## Jalankan Lokal
+- `platform=dramabox|melolo|shortmax`
+- `lang=<kode_bahasa>`
+- `key=<api_key>`
+- `q=<keyword>`
+- `auto=1` (langsung search otomatis jika `q` ada)
 
-Cukup buka `index.html`, atau lebih aman pakai static server:
+Contoh:
 
-```bash
-python -m http.server 8080
+```txt
+hub.html?platform=dramabox&lang=in&key=331D2CC91BC4C0B2218052619DBBBA84
 ```
-
-Lalu buka `http://localhost:8080`.
 
 ## Deploy ke GitHub Pages
 
 1. Push ke branch `main`
-2. Buka **Settings > Pages**
-3. Source: `Deploy from a branch`
-4. Branch: `main` + root
+2. Buka **Settings → Pages**
+3. Source: **Deploy from a branch**
+4. Branch: `main` + `/ (root)`
 5. Save
 
-## Catatan
+Selesai. Halaman portal akan otomatis pakai `index.html`.
 
-- API key/token yang ditaruh di frontend bisa terlihat user (karena client-side).
-- Jika mau lebih aman, gunakan backend proxy private.
+## Catatan Keamanan
+
+Karena ini front-end statis, API key di URL/front-end bisa terlihat user. Untuk produksi aman, pindahkan key ke backend proxy private.
